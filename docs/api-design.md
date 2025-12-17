@@ -20,11 +20,12 @@ A estrutura do envelope é a seguinte:
 
 *   `success` (boolean): Indica o resultado da operação. `true` para sucesso, `false` para erro.
 *   `data` (object | null): Em caso de sucesso, contém os dados da resposta. É `null` em caso de erro.
-*   `error` (object | null): Em caso de erro, contém um objeto `ApiError` detalhando o problema. Não é apresentado em caso de sucesso.
+*   `error` (object | null): Em caso de erro, contém um objeto `ApiError` detalhando o problema. É `null` em caso de sucesso.
 
 ### Exemplo de Resposta de Sucesso
 
 **`GET /tenants/{publicId}`**
+
 ```json
 {
     "success": true,
@@ -41,11 +42,13 @@ A estrutura do envelope é a seguinte:
 
 ## Tratamento de Erros
 
-Quando uma operação falha (`"success": false`), o campo `error` será preenchido com um objeto `ApiError`, que segue a estrutura abaixo:
+Quando uma operação falha (`"success": false`), o campo `error` será preenchido com um objeto `ApiError`.
+
+### Estrutura do Objeto de Erro
 
 ```json
 {
-  "code": "CODIGO_DO_ERRO",
+  "code": "UM_CODIGO_DE_ERRO",
   "message": "Uma mensagem clara e legível para o erro.",
   "details": [
       { "field": "nomeDoCampo", "message": "Descrição do erro para este campo." }
@@ -53,31 +56,32 @@ Quando uma operação falha (`"success": false`), o campo `error` será preenchi
 }
 ```
 
-*   `code` (string): Um identificador único e programático para o tipo de erro.
+*   `code` (string): Um identificador programático para o tipo de erro.
 *   `message` (string): Uma mensagem de alto nível que resume o problema.
-*   `details` (array<object> | null): Uma lista opcional com objetos estruturados detalhando cada erro, usada principalmente para validação.
+*   `details` (array<object> | null): **Campo opcional.** Usado para fornecer uma lista estruturada de suberros, principalmente em falhas de validação. O formato de cada objeto é `{"field": "nomeDoCampo", "message": "mensagemDeErro"}`.
 
-### Estratégia de Erros
+### Códigos de Erro e Status HTTP
 
-*   **Erro Único (Regra de Negócio):** O campo `message` contém a descrição completa e específica do erro. O campo `details` é omitido.
-*   **Múltiplos Erros (Validação de Dados):** O campo `message` contém um resumo genérico (ex: "A requisição possui campos inválidos."), e o campo `details` contém a lista de todos os problemas encontrados.
+Cada `code` de erro está diretamente associado a um status HTTP específico. Isso garante que a API seja previsível: um mesmo código de erro sempre retornará o mesmo status HTTP.
 
-### Escolha dos Status HTTP de Erro
+A seguir, a lista de códigos e seus respectivos status:
 
-A escolha do código de status HTTP para erros é crucial para uma API semântica. A seguir, nossa estratégia:
+*   `VALIDATION_ERROR` -> **`400 Bad Request`**
+    *   **O que significa**: A requisição está malformada ou viola o contrato da API (ex: JSON inválido, campos obrigatórios faltando, formato de dados incorreto).
 
-*   **`400 Bad Request`**: Usado para **erros de sintaxe ou de contrato**. A requisição do cliente está malformada e não pode ser entendida pelo servidor (ex: JSON inválido, campos obrigatórios faltando, formato de dados incorreto). A falha ocorre antes do processamento da lógica de negócio.
+*   `BUSINESS_RULE_VIOLATION` -> **`409 Conflict`**
+    *   **O que significa**: A requisição é válida, mas entra em conflito com o estado atual do servidor (ex: tentar criar um recurso com um `slug` que já existe).
 
-*   **`409 Conflict`**: Usado quando a requisição é sintaticamente perfeita, mas entra em **conflito com o estado atual do servidor**. O principal caso de uso é a violação de uma restrição de unicidade (ex: tentar criar um recurso com um `slug` que já existe). O cliente pode, teoricamente, resolver o conflito e tentar novamente.
+*   `RESOURCE_NOT_FOUND` -> **`404 Not Found`**
+    *   **O que significa**: O recurso específico que você tentou acessar não existe.
 
-*   **`422 Unprocessable Entity`**: Reservado para futuras **violações de regras de negócio semânticas** que não são um conflito de estado direto. O servidor entende a requisição, mas se recusa a processá-la por uma razão de negócio (ex: "um usuário do plano gratuito não pode criar mais de 10 projetos").
-
-*   **`404 Not Found`**: Usado quando o recurso-alvo de uma requisição (identificado por um ID na URL, por exemplo) não existe.
+*   `INTERNAL_SERVER_ERROR` -> **`500 Internal Server Error`**
+    *   **O que significa**: Um erro inesperado e não tratado ocorreu no servidor.
 
 ### Exemplos de Respostas de Erro
 
-#### Erro de Validação (HTTP 400 Bad Request)
-Ocorre quando os dados enviados na requisição não atendem aos critérios de **formato ou contrato** (ex: campos vazios, tamanho excedido, tipo de dado incorreto).
+#### Erro de Validação de Campos (HTTP 400)
+Ocorre quando os dados enviados não atendem aos critérios de formato. O campo `details` é preenchido.
 
 ```json
 {
@@ -93,8 +97,21 @@ Ocorre quando os dados enviados na requisição não atendem aos critérios de *
 }
 ```
 
-#### Erro de Conflito (HTTP 409 Conflict)
-Ocorre quando a requisição é válida, mas não pode ser completada devido a um conflito com o estado atual do recurso (ex: tentar criar um recurso que já existe).
+#### Erro de Sintaxe da Requisição (HTTP 400)
+Ocorre quando a requisição em si está malformada (ex: JSON inválido). O campo `details` é omitido.
+
+```json
+{
+    "success": false,
+    "error": {
+        "code": "VALIDATION_ERROR",
+        "message": "O corpo da requisição está malformado ou é inválido."
+    }
+}
+```
+
+#### Erro de Conflito (HTTP 409)
+Ocorre ao tentar criar um recurso com um identificador único que já existe.
 
 ```json
 {
@@ -106,7 +123,7 @@ Ocorre quando a requisição é válida, mas não pode ser completada devido a u
 }
 ```
 
-#### Recurso Não Encontrado (HTTP 404 Not Found)
+#### Recurso Não Encontrado (HTTP 404)
 Ocorre ao tentar acessar um recurso que não existe.
 
 ```json

@@ -14,5 +14,7 @@ package com.freasq.controller.response
  * @property code Um código de erro único para identificação programática.
  * @property message Uma mensagem de erro legível para humanos.
  * @property details Uma lista opcional de erros mais específicos, útil para validação de múltiplos campos.
+ *                   O tipo `Any?` é usado para flexibilidade. Para erros de validação (`VALIDATION_ERROR`),
+ *                   este campo conterá uma `List<ValidationErrorDetail>`. Para outros erros, será `null`.
  */
 data class ApiError(val code: ErrorCode, val message: String, val details: Any? = null)
