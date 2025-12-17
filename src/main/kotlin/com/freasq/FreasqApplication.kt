@@ -9,3 +9,4 @@ class FreasqApplication
 fun main(args: Array<String>) {
 	runApplication<FreasqApplication>(*args)
 }
+    
