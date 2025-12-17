@@ -2,11 +2,11 @@
 
 **Versão: 1.0**
 
-Este documento descreve as convenções, padrões e a estrutura geral para o desenvolvimento e consumo da API do Freasq. O objetivo é garantir consistência, previsibilidade e clareza em todos os endpoints.
+Este documento descreve as convenções, padrões e a estrutura para o desenvolvimento e consumo da API do Freasq. O objetivo é garantir consistência, previsibilidade e clareza em todos os endpoints.
 
 ## Estrutura de Resposta Padrão
 
-Todas as respostas da API, sejam de sucesso ou de erro, são encapsuladas em um envelope JSON padrão. Isso simplifica o tratamento das respostas no lado do cliente.
+Todas as respostas da API, sejam de sucesso ou de erro, são encapsuladas num envelope JSON padrão. Isso simplifica o tratamento das respostas no lado do cliente.
 
 A estrutura do envelope é a seguinte:
 
@@ -20,7 +20,7 @@ A estrutura do envelope é a seguinte:
 
 *   `success` (boolean): Indica o resultado da operação. `true` para sucesso, `false` para erro.
 *   `data` (object | null): Em caso de sucesso, contém os dados da resposta. É `null` em caso de erro.
-*   `error` (object | null): Em caso de erro, contém um objeto `ApiError` detalhando o problema. É `null` em caso de sucesso.
+*   `error` (object | null): Em caso de erro, contém um objeto `ApiError` detalhando o problema. Não é apresentado em caso de sucesso.
 
 ### Exemplo de Resposta de Sucesso
 
@@ -47,7 +47,9 @@ Quando uma operação falha (`"success": false`), o campo `error` será preenchi
 {
   "code": "CODIGO_DO_ERRO",
   "message": "Uma mensagem clara e legível para o erro.",
-  "details": [ "Detalhe 1", "Detalhe 2" ]
+  "details": [
+      { "field": "nomeDoCampo", "message": "Descrição do erro para este campo." }
+  ]
 }
 ```
 
