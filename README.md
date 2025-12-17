@@ -1,7 +1,8 @@
 # Freasq - Core Service de FAQ
 
-Este projeto fornece um core service de FAQ no modelo SaaS, que posteriormente irá ser criado um front-end Backoffice (React) para consumir esta API.
-O objetivo é gerar uma solução que permita a criação e manutenção de perguntas de FAQ via backoffice para oferecer uma API que será consumida a partir de um script, que é gerado dinâmicamente com base nas preferências do usuário, em que o script será executado dentro do serviço frontend desejado. Também governança de conteúdo, rastreabilidade de mudanças e controle operacional por organização (tenant).
+Este projeto fornece um core service de FAQ no modelo SaaS, que pode ser integrado facilmente a diferentes aplicações (web, mobile ou sistemas internos).
+
+O objetivo é garantir governança de conteúdo, rastreabilidade de mudanças e controle operacional por organização (tenant).
 
 ## Documentação
 
@@ -11,6 +12,21 @@ Toda a documentação técnica e de design da API pode ser encontrada em nosso g
 
 ## Como Executar
 
-1.  Certifique-se de ter o Java 17 e o PostgreSQL rodando.
-2.  Configure as variáveis de banco de dados em `src/main/resources/application.properties`.
-3.  Execute a aplicação através da sua IDE ou usando o comando `./gradlew bootRun`.
+### Pré-requisitos
+*   Java 17 (ou superior)
+*   PostgreSQL 15 (ou superior)
+
+### Configuração
+
+A aplicação é configurada para usar variáveis de ambiente, com valores padrão para facilitar o desenvolvimento local:
+
+*   `DB_URL`: URL de conexão com o banco. (Padrão: `jdbc:postgresql://localhost:5432/freasq`)
+*   `DB_USER`: Usuário do banco. (Padrão: `postgres`)
+*   `DB_PASSWORD`: Senha do banco. (Padrão: `admin`)
+
+### Executando Localmente
+
+1.  **Banco de Dados**: Certifique-se de que seu PostgreSQL está rodando e que você criou um banco de dados chamado `freasq`.
+2.  **Execução**:
+    *   **Com os padrões**: Se seu ambiente local corresponde aos valores padrão, basta executar a aplicação com `./gradlew bootRun`.
+    *   **Com variáveis customizadas**: Se seu ambiente é diferente, configure as variáveis de ambiente (`DB_URL`, `DB_USER`, `DB_PASSWORD`) no seu sistema operacional ou no seu ambiente de execução (IDE) antes de iniciar a aplicação.
