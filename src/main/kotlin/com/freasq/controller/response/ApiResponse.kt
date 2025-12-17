@@ -30,7 +30,7 @@ class ApiResponse<T> private constructor(
          * @param message A mensagem principal que resume o erro.
          * @param details Uma lista opcional com detalhes específicos do erro.
          */
-        fun <T> error(code: String, message: String, details: List<String>? = null): ApiResponse<T> {
+        fun <T> error(code: ErrorCode, message: String, details: Any? = null): ApiResponse<T> {
             return ApiResponse(
                 success = false,
                 data = null,

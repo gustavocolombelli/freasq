@@ -15,4 +15,4 @@ package com.freasq.controller.response
  * @property message Uma mensagem de erro legível para humanos.
  * @property details Uma lista opcional de erros mais específicos, útil para validação de múltiplos campos.
  */
-data class ApiError(val code: String, val message: String, val details: List<String>? = null)
+data class ApiError(val code: ErrorCode, val message: String, val details: Any? = null)
