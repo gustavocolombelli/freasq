@@ -1,0 +1,20 @@
+meta {
+  name: get tenant
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/tenants/{{publicId}}
+  body: none
+  auth: inherit
+}
+
+vars:pre-request {
+  publicId: 7ee00438-e212-41e9-9d27-69581c68632a
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
