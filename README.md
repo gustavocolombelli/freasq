@@ -6,7 +6,7 @@ O objetivo é garantir governança de conteúdo, rastreabilidade de mudanças e 
 
 ## Documentação
 
-Toda a documentação técnica e de design da API pode ser encontrada em nosso guia dedicado.
+Toda a documentação técnica e de ‘design’ da API pode ser encontrada no nosso guia dedicado.
 
 ➡️ **[Guia de Design da API](./docs/api-design.md)**
 
@@ -14,7 +14,7 @@ Toda a documentação técnica e de design da API pode ser encontrada em nosso g
 
 ### Pré-requisitos
 *   Java 17 (ou superior)
-*   PostgreSQL 15 (ou superior)
+*   PostgresSQL 15 (ou superior)
 
 ### Configuração
 
@@ -26,7 +26,7 @@ A aplicação é configurada para usar variáveis de ambiente, com valores padr�
 
 ### Executando Localmente
 
-1.  **Banco de Dados**: Certifique-se de que seu PostgreSQL está rodando e que você criou um banco de dados chamado `freasq`.
+1.  **Banco de Dados**: Certifique-se de que o seu PostgreSQL está a rodar e que você criou um banco de dados chamado `freasq`.
 2.  **Execução**:
-    *   **Com os padrões**: Se seu ambiente local corresponde aos valores padrão, basta executar a aplicação com `./gradlew bootRun`.
-    *   **Com variáveis customizadas**: Se seu ambiente é diferente, configure as variáveis de ambiente (`DB_URL`, `DB_USER`, `DB_PASSWORD`) no seu sistema operacional ou no seu ambiente de execução (IDE) antes de iniciar a aplicação.
+    *   **Com os padrões**: Se o seu ambiente local corresponde aos valores padrão, basta executar a aplicação com `./gradlew bootRun`.
+    *   **Com variáveis customizadas**: Se o seu ambiente é diferente, configure as variáveis de ambiente (`DB_URL`, `DB_USER`, `DB_PASSWORD`) no seu sistema operacional ou no seu ambiente de execução (IDE) antes de iniciar a aplicação.
